@@ -20,8 +20,7 @@ class TodoCreate(BaseModel):
 
 class TodoUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=50)
-    detail: str | None = Field(default=None, max_length=200)
-    done: bool | None = None # Doneの状態はリスト化されたときに変更できる。編集時に変更できるのはタイトルとその詳細だけに留めるべき。
+    detail: str | None = Field(default=None, max_length=200)  # Doneの状態はリスト化されたときに変更できる。編集時に変更できるのはタイトルとその詳細だけに留めるべき。
 
 class TodoOut(BaseModel):
     id: int
