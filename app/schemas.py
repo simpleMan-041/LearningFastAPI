@@ -17,3 +17,6 @@ class TodoOut(BaseModel):
     title: str
     detail: str | None = None
     done: bool
+
+class TodoDoneUpdate(BaseModel):
+    done: bool

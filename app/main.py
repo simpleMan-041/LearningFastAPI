@@ -1,10 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+from app.services.todo_service import NotFoundError
 from app.db import Base, engine
 from app.routers.todo import router as todo_router
 
 app = FastAPI(title="API Practice")
 
 Base.metadata.create_all(bind=engine) # Baseはテーブル定義、metadataはカラム情報、create_all(bind=engine)は接続先情報(engine)へテーブルを全部作れ命令。
+
+@app.exception_handler(NotFoundError)
+async def not_found_handler(requests: Request, exc: NotFoundError):
+    return JSONResponse(
+        status_code=404,
+        content={"detail": exc.message},
+    )
 
 @app.get("/")
 def read_root():

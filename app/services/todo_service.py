@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 from app.models import Todo
-from app.schemas import TodoCreate, TodoUpdate
+from app.schemas import TodoCreate, TodoUpdate, TodoDoneUpdate
 
 @dataclass
 class NotFoundError(Exception):
@@ -27,8 +27,26 @@ def create_todo(db: Session, payload: TodoCreate) -> Todo:
     db.refresh(row)
     return row
 
+def update_todo(db: Session, todo_id: int, payload: TodoUpdate):
+    row = get_todo(db, todo_id)
+    
+    if payload.title is not None:
+        row.title = payload.title
+    if payload.detail is not None:
+        row.detail = payload.detail
+    
+    db.commit()
+    db.refresh(row)
+    return row
+
 def delete_toco(db: Session, todo_id: int) -> None:
     row = get_todo(db, todo_id)
     db.delete(row)
     db.commit()
-    
+
+def set_done(db: Session, todo_id: int, payload: TodoDoneUpdate):
+    row = get_todo(db, todo_id)
+    row.done = payload.done
+    db.commit()
+    db.refresh(row)
+    return row
