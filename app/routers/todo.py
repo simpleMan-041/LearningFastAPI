@@ -9,7 +9,7 @@ from app.services import todo_service
 
 router = APIRouter(prefix="/todos", tags=["todos"]) # prefixはURLのパスに共通の文字列を付与する。tagsは自動生成ドキュメントのグループ分け。今回は全てtags。
 
-@router.get("/{todo_id}", response_model=List[TodoOut])
+@router.get("", response_model=List[TodoOut])
 def list_todo(todo_id: int, db: Session = Depends(get_db)):
     return todo_service.list_todos(db)
 
@@ -26,7 +26,7 @@ def update_todo(todo_id: int, payload: TodoUpdate, db: Session = Depends(get_db)
     return todo_service.update_todo(db, todo_id, payload)
     
 @router.patch("/{todo_id}/done", response_model=TodoOut)
-def set_done(todo_id: int, payload: TodoDoneUpdate, db: Session = (get_db)):
+def set_done(todo_id: int, payload: TodoDoneUpdate, db: Session = Depends(get_db)):
     return todo_service.set_done(db, todo_id, payload)
 
 @router.delete("/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
